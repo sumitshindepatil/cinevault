@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CineVault</title>
+<meta name="description" content="CineVault - your personal movie and series library with watchlists and admin top picks.">
+<meta property="og:title" content="CineVault">
+<meta property="og:description" content="Browse movies and series, build your watchlist, and explore admin top picks.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%AC%3C/text%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
@@ -43,6 +47,19 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-h
 .btn-full{width:100%;padding:0.8rem;border-radius:9px;border:none;background:var(--accent);color:#fff;font-size:0.92rem;font-weight:600;cursor:pointer;transition:opacity 0.2s;font-family:'Inter',sans-serif;margin-top:0.5rem;}
 .btn-full:hover{opacity:0.88;}
 .err-box{background:rgba(230,57,70,0.1);border:1px solid rgba(230,57,70,0.25);border-radius:8px;padding:0.6rem 0.9rem;font-size:0.82rem;color:#ff8080;margin-bottom:1rem;display:none;}
+
+/* GOOGLE BUTTON (centered) */
+.btn-google{
+  display:flex;align-items:center;justify-content:center;gap:0.65rem;
+  width:100%;padding:0.8rem;margin:0 auto 1.25rem;
+  background:#fff;color:#222;border:none;border-radius:9px;
+  font-size:0.92rem;font-weight:600;cursor:pointer;
+  font-family:'Inter',sans-serif;transition:opacity 0.2s;
+}
+.btn-google:hover{opacity:0.88;}
+.btn-google:disabled{opacity:0.6;cursor:wait;}
+.or-divider{display:flex;align-items:center;gap:0.75rem;color:var(--muted);font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:1.25rem;}
+.or-divider::before,.or-divider::after{content:'';flex:1;height:1px;background:var(--border2);}
 
 /* NAV */
 nav{background:rgba(9,9,15,0.97);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;height:58px;padding:0 1.5rem;display:flex;align-items:center;flex-shrink:0;}
@@ -99,13 +116,12 @@ nav{background:rgba(9,9,15,0.97);backdrop-filter:blur(14px);border-bottom:1px so
 .type-badge{position:absolute;top:7px;left:7px;font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;padding:0.15rem 0.38rem;border-radius:4px;}
 .tb-movie{background:rgba(230,57,70,0.85);color:#fff;}
 .tb-series{background:rgba(59,130,246,0.85);color:#fff;}
-/* Watchlist heart button on card */
 .wl-btn{position:absolute;top:7px;right:7px;width:28px;height:28px;border-radius:50%;background:rgba(0,0,0,0.6);border:none;color:#fff;font-size:0.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.18s;z-index:2;}
 .wl-btn:hover{background:rgba(230,57,70,0.7);}
 .wl-btn.added{background:rgba(230,57,70,0.85);color:#fff;}
 .card-admin-row{display:flex;gap:0.35rem;margin-top:0.5rem;}
 
-/* TOP PICKS BANNER CARD */
+/* TOP PICKS */
 .picks-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.25rem;}
 .pick-card{background:var(--card);border:1px solid rgba(245,197,24,0.2);border-radius:14px;overflow:hidden;cursor:pointer;transition:transform 0.22s,box-shadow 0.22s;position:relative;}
 .pick-card:hover{transform:translateY(-4px);box-shadow:0 14px 35px rgba(0,0,0,0.5);}
@@ -161,7 +177,6 @@ nav{background:rgba(9,9,15,0.97);backdrop-filter:blur(14px);border-bottom:1px so
 .gtags{display:flex;flex-wrap:wrap;gap:0.35rem;margin-bottom:0.9rem;}
 .gtag{background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:0.15rem 0.5rem;font-size:0.7rem;color:var(--muted);}
 .modal-ov{font-size:0.86rem;line-height:1.7;color:var(--muted);margin-bottom:1.1rem;}
-/* Rating box — admin only */
 .rating-box{background:var(--bg3);border-radius:11px;padding:0.9rem 1rem;margin-bottom:1rem;}
 .rating-lbl{font-size:0.78rem;font-weight:600;margin-bottom:0.55rem;display:flex;align-items:center;justify-content:space-between;}
 .rating-val{color:var(--gold);font-weight:700;}
@@ -169,7 +184,6 @@ nav{background:rgba(9,9,15,0.97);backdrop-filter:blur(14px);border-bottom:1px so
 .star-btn{font-size:1.35rem;color:var(--border2);cursor:pointer;transition:color 0.1s,transform 0.1s;line-height:1;}
 .star-btn.on{color:var(--gold);}
 .star-btn:hover{transform:scale(1.18);}
-/* Watchlist button in modal */
 .wl-modal-btn{display:flex;align-items:center;gap:0.5rem;padding:0.55rem 1.1rem;border-radius:9px;border:1px solid var(--border2);background:transparent;color:var(--muted);font-size:0.84rem;font-weight:500;cursor:pointer;transition:all 0.2s;font-family:'Inter',sans-serif;}
 .wl-modal-btn:hover{border-color:rgba(168,85,247,0.4);color:var(--purple);}
 .wl-modal-btn.in-wl{background:rgba(168,85,247,0.12);border-color:rgba(168,85,247,0.4);color:var(--purple);}
@@ -198,7 +212,6 @@ nav{background:rgba(9,9,15,0.97);backdrop-filter:blur(14px);border-bottom:1px so
 .fg textarea{resize:vertical;min-height:75px;}
 .two-fg{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;}
 .add-footer{display:flex;gap:0.75rem;margin-top:0.25rem;}
-/* top pick note field */
 .pick-note-field{background:rgba(245,197,24,0.06);border:1px solid rgba(245,197,24,0.2);border-radius:8px;padding:0.62rem 0.9rem;width:100%;color:var(--text);font-size:0.86rem;outline:none;font-family:'Inter',sans-serif;}
 .pick-note-field:focus{border-color:var(--gold);}
 .pick-note-field::placeholder{color:var(--muted);opacity:0.7;}
@@ -258,6 +271,19 @@ nav{background:rgba(9,9,15,0.97);backdrop-filter:blur(14px);border-bottom:1px so
   <div class="login-card">
     <span class="login-logo">CineVault</span>
     <span class="login-tag">Your personal movie &amp; series library</span>
+
+    <!-- GOOGLE SIGN-IN -->
+    <button class="btn-google" id="google-btn" onclick="doGoogleLogin()">
+      <svg width="18" height="18" viewBox="0 0 48 48">
+        <path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/>
+        <path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4.1 7.1-10.1 7.1-17.5z"/>
+        <path fill="#FBBC05" d="M10.5 28.7c-.5-1.5-.8-3.1-.8-4.7s.3-3.2.8-4.7l-7.9-6.1C.9 16.5 0 20.1 0 24s.9 7.5 2.6 10.8l7.9-6.1z"/>
+        <path fill="#34A853" d="M24 48c6.3 0 11.6-2.1 15.5-5.7l-7.5-5.8c-2.1 1.4-4.8 2.3-8 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/>
+      </svg>
+      <span>Continue with Google</span>
+    </button>
+    <div class="or-divider">or</div>
+
     <div class="tab-row">
       <button class="tab-btn active" id="tab-in" onclick="switchTab('in')">Sign In</button>
       <button class="tab-btn" id="tab-up" onclick="switchTab('up')">Create Account</button>
@@ -316,7 +342,6 @@ nav{background:rgba(9,9,15,0.97);backdrop-filter:blur(14px);border-bottom:1px so
       </div>
     </div>
 
-    <!-- ADMIN TOP PICKS -->
     <div id="home-picks-section">
       <div class="sec-hd">
         <div class="sec-title"><div class="sec-dot-gold"></div>⭐ Admin Top Picks</div>
@@ -326,7 +351,6 @@ nav{background:rgba(9,9,15,0.97);backdrop-filter:blur(14px);border-bottom:1px so
       </div>
     </div>
 
-    <!-- ALL LIBRARY -->
     <div style="margin-top:2.5rem">
       <div class="sec-hd">
         <div class="sec-title"><div class="sec-dot"></div>Full Library</div>
@@ -448,7 +472,6 @@ nav{background:rgba(9,9,15,0.97);backdrop-filter:blur(14px);border-bottom:1px so
         <div class="gtags" id="md-tags"></div>
         <p class="modal-ov" id="md-overview"></p>
 
-        <!-- ADMIN RATING ONLY -->
         <div class="rating-box" id="rating-box" style="display:none">
           <div class="rating-lbl">⭐ Admin Rating <span class="rating-val" id="md-myrating"></span></div>
           <div class="stars-row" id="stars-row">
@@ -465,12 +488,9 @@ nav{background:rgba(9,9,15,0.97);backdrop-filter:blur(14px);border-bottom:1px so
           </div>
         </div>
 
-        <!-- USER WATCHLIST BUTTON -->
         <div class="modal-acts">
           <button class="wl-modal-btn" id="wl-modal-btn" onclick="toggleWatchlistFromModal()">♡ Add to Watchlist</button>
-          <div id="md-admin-btns" style="display:contents">
-            <!-- admin edit/delete inserted here -->
-          </div>
+          <div id="md-admin-btns" style="display:contents"></div>
         </div>
       </div>
     </div>
@@ -495,7 +515,6 @@ nav{background:rgba(9,9,15,0.97);backdrop-filter:blur(14px);border-bottom:1px so
       <div class="fg"><label>Overview</label><textarea id="af-overview" placeholder="Brief description…"></textarea></div>
       <div class="fg"><label>Poster Image URL (optional)</label><input id="af-poster" type="url" placeholder="https://…"></div>
       <div class="fg"><label>TMDB ID (optional — auto-fetches poster)</label><input id="af-tmdb" placeholder="e.g. 550 for Fight Club"></div>
-      <!-- TOP PICK TOGGLE -->
       <div class="fg">
         <label>Top Pick</label>
         <label class="pick-toggle">
@@ -503,7 +522,6 @@ nav{background:rgba(9,9,15,0.97);backdrop-filter:blur(14px);border-bottom:1px so
           <span>⭐ Mark as Admin Top Pick (shows on homepage)</span>
         </label>
       </div>
-      <!-- TOP PICK NOTE (shows only when ticked) -->
       <div class="fg" id="pick-note-wrap" style="display:none">
         <label>Top Pick Note (why you recommend it)</label>
         <input class="pick-note-field" id="af-picknote" placeholder="e.g. Best thriller of the decade!">
@@ -532,9 +550,12 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db   = firebase.firestore();
 
+// Optional: uncomment to force login every time the tab is closed/reopened
+// auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
+
 // ═══════════════════ ADMIN EMAILS ═══════════════════
-// LINE 358 — replace with YOUR email
-const ADMIN_EMAILS = ['sumitshinde9421@gmail.com', 'sumit@cinevault.com'];
+// Must match the email in your Firestore rules
+const ADMIN_EMAILS = ['sumitshinde9421@gmail.com'];
 
 // ═══════════════════ TMDB ═══════════════════
 const TKEY    = '8265bd1679663a7ea12ac168da84d2e8';
@@ -552,7 +573,7 @@ async function tfetch(ep) {
 let currentUser = null, isAdmin = false;
 let currentPage = 'home';
 let customItems = [];
-let watchlist   = []; // array of item keys for current user
+let watchlist   = [];
 let activeDetail = null, editMode = null;
 let movieGenre = 'all', seriesGenre = 'all';
 let tmdbMovies = {data:[],loaded:false}, tmdbSeries = {data:[],loaded:false};
@@ -562,12 +583,15 @@ auth.onAuthStateChanged(async user => {
   document.getElementById('init-loader').style.display = 'none';
   if (user) {
     currentUser = user;
-    isAdmin = ADMIN_EMAILS.includes(user.email);
-    await db.collection('users').doc(user.uid).set({
-      email: user.email,
-      displayName: user.displayName || user.email.split('@')[0],
-      lastLogin: firebase.firestore.FieldValue.serverTimestamp()
-    }, {merge:true});
+    // Admin only if email matches AND is verified (Google accounts are always verified)
+    isAdmin = ADMIN_EMAILS.includes(user.email) && user.emailVerified;
+    try {
+      await db.collection('users').doc(user.uid).set({
+        email: user.email,
+        displayName: user.displayName || user.email.split('@')[0],
+        lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+      }, {merge:true});
+    } catch {}
     await Promise.all([loadCustomItems(), loadWatchlist()]);
     enterApp();
   } else {
@@ -609,6 +633,20 @@ function switchTab(t) {
 function showErr(m) { const e=document.getElementById('login-err'); e.textContent=m; e.style.display='block'; }
 function hideErr()  { document.getElementById('login-err').style.display='none'; }
 
+async function doGoogleLogin() {
+  const btn = document.getElementById('google-btn');
+  btn.disabled = true;
+  try {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
+    await auth.signInWithPopup(provider);
+    hideErr();
+  } catch (e) {
+    if (e.code !== 'auth/cancelled-popup-request') showErr(friendlyErr(e.code));
+  }
+  btn.disabled = false;
+}
+
 async function doLogin() {
   const email=document.getElementById('si-email').value.trim();
   const pass=document.getElementById('si-pass').value.trim();
@@ -635,6 +673,8 @@ async function doSignup() {
 async function doLogout() {
   await auth.signOut();
   currentPage='home';
+  document.getElementById('login-btn').textContent='Sign In →';
+  document.getElementById('signup-btn').textContent='Create Account →';
   toast('Logged out','ok');
 }
 
@@ -647,6 +687,10 @@ function friendlyErr(c) {
     'auth/weak-password':'Password must be at least 6 characters.',
     'auth/too-many-requests':'Too many attempts. Please wait.',
     'auth/invalid-credential':'Incorrect email or password.',
+    'auth/popup-closed-by-user':'Sign-in popup was closed.',
+    'auth/popup-blocked':'Popup was blocked. Allow popups for this site.',
+    'auth/unauthorized-domain':'This domain is not authorised in Firebase.',
+    'auth/account-exists-with-different-credential':'This email is already registered with a different sign-in method.',
   }[c] || 'Something went wrong. Please try again.';
 }
 
@@ -697,13 +741,12 @@ async function toggleWatchlist(id, type, title) {
     watchlist.push(key);
     toast(`Added "${title}" to watchlist 🎬`,'t-wl');
   }
-  await saveWatchlist();
+  try { await saveWatchlist(); } catch { toast('Could not save watchlist','err'); }
   updateWLBadges();
   updateHeroStats();
 }
 
 function updateWLBadges() {
-  // update all heart buttons on cards
   document.querySelectorAll('.wl-btn').forEach(btn => {
     const id   = btn.dataset.id;
     const type = btn.dataset.type;
@@ -731,11 +774,11 @@ function makeCard(item, type) {
       <button class="btn btn-danger btn-sm" onclick="event.stopPropagation();deleteItem('${item.firestoreId}')">Delete</button>
     </div>` : '';
 
-  return `<div class="card" onclick="openDetail(${JSON.stringify(id)},'${type}',${isCustom})">
+  return `<div class="card" onclick='openDetail(${JSON.stringify(id)},"${type}",${isCustom})'>
     <span class="type-badge tb-${type==='movie'?'movie':'series'}">${type==='movie'?'Movie':'Series'}</span>
     <button class="wl-btn ${inWL?'added':''}" data-id="${id}" data-type="${type}"
       title="${inWL?'Remove from watchlist':'Add to watchlist'}"
-      onclick="event.stopPropagation();toggleWatchlist(${JSON.stringify(id)},'${type}',${JSON.stringify(title)})">${inWL?'♥':'♡'}</button>
+      onclick='event.stopPropagation();toggleWatchlist(${JSON.stringify(id)},"${type}",${JSON.stringify(title).replace(/'/g,"&#39;")})'>${inWL?'♥':'♡'}</button>
     ${poster ? `<img class="card-img" src="${poster}" alt="${title}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">` : ''}
     <div class="card-img-ph" style="display:${poster?'none':'flex'}">${type==='movie'?'🎬':'📺'}</div>
     <div class="card-body">
@@ -749,7 +792,6 @@ function makeCard(item, type) {
   </div>`;
 }
 
-// Top Pick card (different layout)
 function makePickCard(item, type) {
   const poster  = item.poster_path ? TIMG+item.poster_path : (item._poster||'');
   const title   = item._title||item.title||item.name||'Untitled';
@@ -757,7 +799,7 @@ function makePickCard(item, type) {
   const score   = item._myrating || (item.vote_average ? item.vote_average.toFixed(1) : '');
   const note    = item._picknote || '';
   const id      = item.firestoreId || item.id;
-  return `<div class="pick-card" onclick="openDetail(${JSON.stringify(id)},'${type}',${!!item.firestoreId})">
+  return `<div class="pick-card" onclick='openDetail(${JSON.stringify(id)},"${type}",${!!item.firestoreId})'>
     <span class="pick-badge">⭐ Top Pick</span>
     ${poster
       ? `<img class="pick-img" src="${poster}" alt="${title}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
@@ -774,22 +816,23 @@ function makePickCard(item, type) {
 // ═══════════════════ HOME ═══════════════════
 async function loadHome() {
   updateHeroStats();
-  // Top picks
   const picks = customItems.filter(i=>i._toppick);
   const picksEl = document.getElementById('home-picks');
   picksEl.innerHTML = picks.length
     ? picks.map(i=>makePickCard(i,i._type)).join('')
     : '<div class="empty-state"><div class="eico">⭐</div><h4>No top picks yet</h4><p>Admin can mark items as top picks when adding</p></div>';
 
-  // Full library
   const libEl = document.getElementById('home-library');
   libEl.innerHTML = '<div class="loading"><div class="spin"></div> Loading…</div>';
   try {
     const [p1,p2] = await Promise.all([tfetch('/movie/popular?page=1'),tfetch('/tv/popular?page=1')]);
-    const tmdb = [...(p1.results||[]).slice(0,8), ...(p2.results||[]).slice(0,8)];
+    const tmdb = [
+      ...(p1.results||[]).slice(0,8).map(m=>({...m,_type:'movie'})),
+      ...(p2.results||[]).slice(0,8).map(s=>({...s,_type:'series'}))
+    ];
     const all  = [...customItems, ...tmdb];
     libEl.innerHTML = all.length
-      ? all.map(i => makeCard(i, i._type||(i.media_type==='movie'?'movie':'series'))).join('')
+      ? all.map(i => makeCard(i, i._type||'movie')).join('')
       : emptyHTML('🎬','No items yet');
   } catch { libEl.innerHTML = emptyHTML('⚠️','Could not load','Check internet'); }
 }
@@ -886,10 +929,8 @@ async function loadWatchlistPage() {
   for (const key of watchlist) {
     const [type, ...idParts] = key.split('_');
     const id = idParts.join('_');
-    // Check if it's a custom item first
     const custom = customItems.find(i=>i.firestoreId===id);
     if (custom) { cards.push(makeCard(custom, type)); continue; }
-    // Otherwise fetch from TMDB
     try {
       const ep = type==='movie' ? `/movie/${id}` : `/tv/${id}`;
       const d  = await tfetch(ep);
@@ -918,13 +959,11 @@ async function openDetail(id, type, isCustom) {
   }
   activeDetail = {id, type, isCustom};
 
-  // Watchlist button state
   const wlBtn = document.getElementById('wl-modal-btn');
   const inWL  = inWatchlist(id, type);
   wlBtn.className = 'wl-modal-btn' + (inWL?' in-wl':'');
   wlBtn.textContent = inWL ? '♥ In Watchlist' : '♡ Add to Watchlist';
 
-  // Admin rating
   if (isAdmin) {
     document.getElementById('rating-box').style.display = 'block';
     loadAdminRating(id, type);
@@ -961,7 +1000,6 @@ function fillModal(item, type, isCustom) {
     img.src=poster;
   }
 
-  // Admin edit/delete buttons
   if (isAdmin && isCustom) {
     document.getElementById('md-admin-btns').innerHTML = `
       <button class="btn btn-ghost btn-sm" onclick="openEditCurrent()">✏️ Edit</button>
@@ -971,7 +1009,7 @@ function fillModal(item, type, isCustom) {
 }
 
 function paintStars(n) {
-  document.querySelectorAll('.star-btn').forEach((s,i)=>s.classList.toggle('on',i<n));
+  document.querySelectorAll('.star-btn').forEach((s,i)=>{ s.style.color=''; s.classList.toggle('on',i<n); });
   document.getElementById('md-myrating').textContent = n ? n+' / 10' : '';
 }
 function hov(n)  { document.querySelectorAll('.star-btn').forEach((s,i)=>s.style.color=i<n?'var(--gold)':''); }
@@ -1005,12 +1043,12 @@ function openEditCurrent() { const d=activeDetail; closeDetail(); if(d) openEdit
 function deleteCurrent()   { const d=activeDetail; closeDetail(); if(d) deleteItem(d.id); }
 
 // ═══════════════════ ADD / EDIT ═══════════════════
-// Show/hide pick note field
 document.getElementById('af-toppick').addEventListener('change', function() {
   document.getElementById('pick-note-wrap').style.display = this.checked ? 'block' : 'none';
 });
 
 function openAdd(type) {
+  if (!isAdmin) return;
   editMode=null;
   document.getElementById('add-modal-title').textContent = type==='movie' ? 'ADD MOVIE' : 'ADD SERIES';
   document.getElementById('af-save').textContent = 'Save';
@@ -1020,6 +1058,7 @@ function openAdd(type) {
 }
 
 function openEdit(firestoreId, type) {
+  if (!isAdmin) return;
   const item = customItems.find(i=>i.firestoreId===firestoreId);
   if (!item) return;
   editMode={firestoreId,type};
@@ -1048,6 +1087,7 @@ function clearForm() {
 }
 
 async function saveItem() {
+  if (!isAdmin) return;
   const title = document.getElementById('af-title').value.trim();
   if (!title) { toast('Title is required','err'); return; }
   const type   = document.getElementById('ov-add').dataset.type;
@@ -1095,6 +1135,7 @@ async function saveItem() {
 }
 
 async function deleteItem(firestoreId) {
+  if (!isAdmin) return;
   if (!confirm('Delete this item?')) return;
   try {
     await db.collection('items').doc(firestoreId).delete();
@@ -1177,9 +1218,9 @@ function toast(msg,type='ok') {
   const t=document.getElementById('toast');
   document.getElementById('toast-ico').textContent = type==='t-wl'?'🎬':(type==='ok'?'✓':'✕');
   document.getElementById('toast-msg').textContent = msg;
-  t.className=`toast ${type} visible`;
+  t.className=`toast ${type==='ok'?'t-ok':type==='err'?'t-err':type} visible`;
   clearTimeout(t._tid);
-  t._tid=setTimeout(()=>{t.className=`toast ${type}`;},3000);
+  t._tid=setTimeout(()=>{t.classList.remove('visible');},3000);
 }
 </script>
 </body>
